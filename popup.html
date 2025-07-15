@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FB HTML Grabber</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      width: 250px;
+      padding: 15px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 8px;
+      background-color: #4267B2;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover {
+      background-color: #365899;
+    }
+    #stopScraping {
+      background-color: #dc3545;
+    }
+    #stopScraping:hover {
+      background-color: #c82333;
+    }
+    #status {
+      margin-top: 10px;
+      padding: 8px;
+      font-size: 12px;
+      background-color: #f8f9fa;
+      border-radius: 4px;
+      border-left: 3px solid #4267B2;
+    }
+  </style>
+</head>
+<body>
+  <button id="grabHtml">Manual Scrape</button>
+  <button id="stopScraping">Stop Auto-Scraping</button>
+  <div id="status">Checking Facebook page...</div>
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "Facebook HTML Grabber",
+  "version": "1.0",
+  "description": "Capture and download the current Facebook HTML page",
+  "permissions": ["scripting", "activeTab"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
+  },
+  "host_permissions": ["<all_urls>"]
+}

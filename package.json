@@ -1,0 +1,23 @@
+{
+  "name": "Facebook Post Scraper",
+  "version": "1.0.0",
+  "description": "Chrome extension for scraping Facebook posts data",
+  "author": "Your Name",
+  "license": "MIT",
+  "keywords": ["facebook", "scraper", "chrome-extension", "data-extraction"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/facebook-post-scraper"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/facebook-post-scraper/issues"
+  },
+  "homepage": "https://github.com/yourusername/facebook-post-scraper#readme",
+  "scripts": {
+    "build": "echo 'No build process required for this extension'",
+    "test": "echo 'No tests specified'",
+    "lint": "echo 'No linting configured'"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}

@@ -195,6 +195,9 @@ function scrapeIndividualPost(postElement, postNumber) {
         // Log the scraped content
         console.log(`[${new Date().toLocaleTimeString()}] Individual Post ${postNumber}:`, content);
         
+        // Add div with scraped content under the post
+        addScrapedContentDiv(postElement, postNumber, content);
+        
         // Show notification
         showNotification(`Post ${postNumber} scraped! Check console for content.`);
         
@@ -203,6 +206,75 @@ function scrapeIndividualPost(postElement, postNumber) {
         console.error(`❌ Error scraping post ${postNumber}:`, error);
         showNotification(`Error scraping post ${postNumber}!`);
         return null;
+    }
+}
+
+// Function to add scraped content div under post
+function addScrapedContentDiv(postElement, postNumber, content) {
+    try {
+        // Get the post container where the div will be inserted
+        const postContainer = postElement.closest('div[data-ad-rendering-role="story_message"]').parentElement;
+        
+        // Check if div already exists (look for it after the post container)
+        const existingDiv = postContainer.parentElement.querySelector(`.scraped-content-${postNumber}`);
+        if (existingDiv) {
+            // Update existing div content instead of creating new one
+            existingDiv.querySelector('div:nth-child(2)').textContent = content;
+            existingDiv.querySelector('div:nth-child(3) em').textContent = `Generated at: ${new Date().toLocaleTimeString()}`;
+            console.log(`✅ Updated existing scraped content div for post ${postNumber}`);
+            return;
+        }
+        
+        // Create new div with scraped content
+        const scrapedDiv = document.createElement('div');
+        scrapedDiv.className = `scraped-content-${postNumber}`;
+        scrapedDiv.style.cssText = `
+            background: #f0f2f5;
+            border: 2px solid #4267B2;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #1c1e21;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            animation: fadeIn 0.5s ease;
+        `;
+        
+        // Add lorem ipsum content
+        scrapedDiv.innerHTML = `
+            <div style="font-weight: bold; color: #4267B2; margin-bottom: 10px;">
+                📊 Scraped Content for Post ${postNumber}
+            </div>
+            <div>
+                ${content}    
+            </div>
+            <div style="margin-top: 10px; font-size: 12px; color: #65676b;">
+                <em>Generated at: ${new Date().toLocaleTimeString()}</em>
+            </div>
+        `;
+        
+        // Add fade-in animation if not already added
+        if (!document.getElementById('scraped-content-styles')) {
+            const style = document.createElement('style');
+            style.id = 'scraped-content-styles';
+            style.textContent = `
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(-10px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Insert the div after the post element
+        const postContainerElement = postElement.closest('div[data-ad-rendering-role="story_message"]').parentElement;
+        postContainerElement.insertAdjacentElement('afterend', scrapedDiv);
+        
+        console.log(`✅ Added scraped content div for post ${postNumber}`);
+    } catch (error) {
+        console.error(`❌ Error adding scraped content div for post ${postNumber}:`, error);
     }
 }
 

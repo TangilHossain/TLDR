@@ -102,14 +102,172 @@ function stopAutoScraping() {
 
 // Start automatic scraping when page loads
 if (window.location.hostname.includes('facebook.com')) {
-    console.log('📘 Facebook detected, starting automatic background scraping...');
+    console.log('📘 Facebook detected, adding scrape buttons to posts...');
     
-    // Start scraping after a short delay to ensure page is loaded
+    // Only add buttons, no automatic scraping
     setTimeout(() => {
-        startAutoScraping();
+        addScrapeButtonsToPosts();
     }, 3000); // 3 second delay
 } else {
-    console.log('⚠️ Not on Facebook, skipping auto-scraping');
+    console.log('⚠️ Not on Facebook, skipping button addition');
+}
+
+// Function to add scrape buttons to posts
+function addScrapeButtonsToPosts() {
+    console.log('🔘 Adding scrape buttons to posts...');
+    
+    // Find all posts that might contain the target divs
+    const allPosts = document.querySelectorAll('div[data-ad-rendering-role="story_message"]');
+    
+    allPosts.forEach((post, index) => {
+        // Check if button already exists
+        if (post.querySelector('.fb-scraper-button')) {
+            return;
+        }
+        
+        // Create scrape button
+        const scrapeButton = document.createElement('button');
+        scrapeButton.textContent = '🔍 Scrape';
+        scrapeButton.className = 'fb-scraper-button';
+        scrapeButton.style.cssText = `
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, #4267B2, #365899);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        `;
+        
+        // Add hover effect
+        scrapeButton.onmouseover = function() {
+            this.style.transform = 'scale(1.1)';
+            this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+        };
+        
+        scrapeButton.onmouseout = function() {
+            this.style.transform = 'scale(1)';
+            this.style.boxShadow = '0 2px 6px rgba(0,0,0,0.2)';
+        };
+        
+        // Add click event to scrape individual post
+        scrapeButton.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            scrapeIndividualPost(post, index + 1);
+        };
+        
+        // Make the parent container relative for absolute positioning
+        const parentContainer = post.closest('div');
+        if (parentContainer) {
+            parentContainer.style.position = 'relative';
+            parentContainer.appendChild(scrapeButton);
+        }
+    });
+    
+    console.log(`✅ Added scrape buttons to ${allPosts.length} posts`);
+}
+
+// Function to scrape individual post
+function scrapeIndividualPost(postElement, postNumber) {
+    try {
+        console.log(`🎯 Scraping individual post ${postNumber}...`);
+        
+        // Extract content from this specific post
+        const targetspans = postElement.querySelectorAll('span[dir="auto"]');
+        let content = '';
+        
+        targetspans.forEach(span => {
+            content += `${span.innerText}\n`;
+        });
+        
+        if (!content) {
+            content = 'No content found in this post';
+        }
+        
+        // Log the scraped content
+        console.log(`[${new Date().toLocaleTimeString()}] Individual Post ${postNumber}:`, content);
+        
+        // Show notification
+        showNotification(`Post ${postNumber} scraped! Check console for content.`);
+        
+        return content;
+    } catch (error) {
+        console.error(`❌ Error scraping post ${postNumber}:`, error);
+        showNotification(`Error scraping post ${postNumber}!`);
+        return null;
+    }
+}
+
+// Function to show notification
+function showNotification(message) {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.textContent = message;
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #4267B2, #365899);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: bold;
+        z-index: 10000;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        animation: slideIn 0.3s ease;
+    `;
+    
+    // Add CSS animation
+    if (!document.getElementById('fb-scraper-styles')) {
+        const style = document.createElement('style');
+        style.id = 'fb-scraper-styles';
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    document.body.appendChild(notification);
+    
+    // Remove notification after 3 seconds
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
+}
+
+// Function to continuously add buttons to new posts
+function continuouslyAddButtons() {
+    setInterval(() => {
+        addScrapeButtonsToPosts();
+    }, 2000); // Check every 2 seconds for new posts
+}
+
+// Start continuous button adding
+if (window.location.hostname.includes('facebook.com')) {
+    setTimeout(() => {
+        continuouslyAddButtons();
+    }, 5000); // Start after 5 seconds
 }
 
 // Listen for page navigation changes (for single-page app behavior)
@@ -118,10 +276,9 @@ setInterval(() => {
     if (currentUrl !== window.location.href) {
         currentUrl = window.location.href;
         if (window.location.hostname.includes('facebook.com')) {
-            console.log('📘 Facebook page changed, restarting scraping...');
-            stopAutoScraping();
+            console.log('📘 Facebook page changed, adding buttons to new posts...');
             setTimeout(() => {
-                startAutoScraping();
+                addScrapeButtonsToPosts();
             }, 2000);
         }
     }
@@ -145,6 +302,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         sendResponse({success: true, message: 'Auto-scraping stopped'});
     } else if (request.action === 'getStatus') {
         sendResponse({success: true, isRunning: isAutoScraping});
+    } else if (request.action === 'addButtons') {
+        addScrapeButtonsToPosts();
+        sendResponse({success: true, message: 'Buttons added to posts'});
     }
     return true; // Keep the message channel open for async response
 });

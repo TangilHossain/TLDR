@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>FB Background Scraper</title>
+  <title>FB Individual Post Scraper</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      width: 280px;
+      width: 300px;
       padding: 15px;
     }
     .header {
@@ -40,6 +40,12 @@
     #startScraping:hover {
       background-color: #218838;
     }
+    #addButtons {
+      background-color: #17a2b8;
+    }
+    #addButtons:hover {
+      background-color: #138496;
+    }
     #status {
       margin-top: 10px;
       padding: 12px;
@@ -60,13 +66,14 @@
   </style>
 </head>
 <body>
-  <div class="header">🔄 Background Facebook Scraper</div>
-  <button id="grabHtml">Manual Scrape</button>
+  <div class="header">� Individual Post Scraper</div>
+  <button id="grabHtml">Manual Scrape All Posts</button>
+  <button id="addButtons">Add Scrape Buttons to Posts</button>
   <button id="startScraping">Start Background Scraping</button>
   <button id="stopScraping">Stop Background Scraping</button>
-  <div id="status">Checking background scraping status...</div>
+  <div id="status">Checking for scrape buttons...</div>
   <div class="info">
-    💡 Tip: Scraping runs automatically in the background when you visit Facebook. Check the browser console (F12) to see logs every second!
+    💡 Tip: Look for blue "🔍 Scrape" buttons next to each post on Facebook. Click them to scrape individual posts!
   </div>
   <script src="popup.js"></script>
 </body>

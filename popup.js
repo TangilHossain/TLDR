@@ -71,7 +71,7 @@ async function startAutoScraping() {
     }, 1000); // 1 second interval
 }
 
-// Check if we're on Facebook and get background scraping status
+// Check if we're on Facebook and get button status
 document.addEventListener('DOMContentLoaded', async () => {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     
@@ -80,22 +80,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
     
-    updateStatus('🔄 Checking background scraping status...');
+    updateStatus('� Scrape buttons are available on each post! Click them to scrape individual posts.');
     
-    // Add a delay to ensure content script is loaded
+    // Add buttons to posts if not already added
     setTimeout(() => {
-        chrome.tabs.sendMessage(tab.id, {action: 'getStatus'}, (response) => {
+        chrome.tabs.sendMessage(tab.id, {action: 'addButtons'}, (response) => {
             if (chrome.runtime.lastError) {
-                updateStatus('🔄 Content script loading... Try starting manually.');
-                console.log('Content script not ready:', chrome.runtime.lastError.message);
+                updateStatus('🔄 Extension loading... Refresh the page if buttons don\'t appear.');
             } else if (response && response.success) {
-                if (response.isRunning) {
-                    updateStatus('✅ Background scraping is already running every 1 second!');
-                } else {
-                    updateStatus('⏸️ Background scraping is not running. Click Start to begin.');
-                }
-            } else {
-                updateStatus('🔄 Background scraping will start automatically...');
+                updateStatus('✅ Scrape buttons added to posts! Click any button to scrape that post.');
             }
         });
     }, 1000);
@@ -131,6 +124,28 @@ document.getElementById('grabHtml').addEventListener('click', async() => {
             updateStatus('✅ Manual scrape completed!');
         } else {
             updateStatus('❌ Manual scrape failed!');
+        }
+    });
+});
+
+// Add buttons to posts
+document.getElementById('addButtons').addEventListener('click', async() => {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+    if (!tab.url.includes('facebook.com')) {
+        updateStatus('Please navigate to Facebook first!');
+        return;
+    }
+
+    updateStatus('🔄 Adding scrape buttons to posts...');
+
+    chrome.tabs.sendMessage(tab.id, {action: 'addButtons'}, (response) => {
+        if (chrome.runtime.lastError) {
+            updateStatus('❌ Failed to add buttons: ' + chrome.runtime.lastError.message);
+        } else if (response && response.success) {
+            updateStatus('✅ Scrape buttons added to posts!');
+        } else {
+            updateStatus('❌ Failed to add buttons!');
         }
     });
 });

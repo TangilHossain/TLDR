@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>FB HTML Grabber</title>
+  <title>FB Background Scraper</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      width: 250px;
+      width: 280px;
       padding: 15px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 15px;
+      color: #4267B2;
+      font-weight: bold;
     }
     button {
       width: 100%;
@@ -28,20 +34,40 @@
     #stopScraping:hover {
       background-color: #c82333;
     }
+    #startScraping {
+      background-color: #28a745;
+    }
+    #startScraping:hover {
+      background-color: #218838;
+    }
     #status {
       margin-top: 10px;
-      padding: 8px;
+      padding: 12px;
       font-size: 12px;
       background-color: #f8f9fa;
       border-radius: 4px;
       border-left: 3px solid #4267B2;
+      line-height: 1.4;
+    }
+    .info {
+      margin-top: 10px;
+      padding: 8px;
+      font-size: 11px;
+      background-color: #e7f3ff;
+      border-radius: 4px;
+      color: #0056b3;
     }
   </style>
 </head>
 <body>
+  <div class="header">🔄 Background Facebook Scraper</div>
   <button id="grabHtml">Manual Scrape</button>
-  <button id="stopScraping">Stop Auto-Scraping</button>
-  <div id="status">Checking Facebook page...</div>
+  <button id="startScraping">Start Background Scraping</button>
+  <button id="stopScraping">Stop Background Scraping</button>
+  <div id="status">Checking background scraping status...</div>
+  <div class="info">
+    💡 Tip: Scraping runs automatically in the background when you visit Facebook. Check the browser console (F12) to see logs every second!
+  </div>
   <script src="popup.js"></script>
 </body>
 </html>

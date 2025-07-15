@@ -1,12 +1,32 @@
 {
   "manifest_version": 3,
-  "name": "Facebook HTML Grabber",
+  "name": "Facebook Background Scraper",
   "version": "1.0",
-  "description": "Capture and download the current Facebook HTML page",
-  "permissions": ["scripting", "activeTab"],
+  "description": "Automatically scrape Facebook posts in the background",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://www.facebook.com/*",
+    "https://facebook.com/*"
+  ],
   "action": {
     "default_popup": "popup.html",
-    "default_icon": "icon.png"
+    "default_title": "Facebook Background Scraper"
   },
-  "host_permissions": ["<all_urls>"]
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.facebook.com/*",
+        "https://facebook.com/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
 }

@@ -1,3 +1,7 @@
+const {res} = require('./ai');
+
+
+
 // Content script for Facebook Post Scraper
 console.log('🚀 Facebook Post Scraper content script loaded');
 
@@ -414,3 +418,8 @@ function autoScroll() {
 // Export functions for popup use
 window.scrapeFacebookPosts = scrapeFacebookPosts;
 window.autoScroll = autoScroll;
+
+
+module.exports = {
+  content
+};

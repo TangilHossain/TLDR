@@ -287,7 +287,9 @@ function addScrapedContentDiv(postElement, postNumber, content) {
         const scrapedDiv = document.createElement('div');
         scrapedDiv.className = `scraped-content-${postNumber}`;
         scrapedDiv.style.cssText = `
-            background: #f0f2f5;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 25%, #90caf9 50%, #64b5f6 75%, #42a5f5 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 4s ease infinite, fadeIn 0.5s ease;
             border: 2px solid #4267B2;
             border-radius: 8px;
             padding: 15px;
@@ -297,7 +299,8 @@ function addScrapedContentDiv(postElement, postNumber, content) {
             line-height: 1.6;
             color: #1c1e21;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            animation: fadeIn 0.5s ease;
+            position: relative;
+            overflow: hidden;
         `;
         
         // Add loading content
@@ -307,8 +310,8 @@ function addScrapedContentDiv(postElement, postNumber, content) {
             </div>
             <div class="summary-content">
                 <div style="display: flex; align-items: center; color: #65676b;">
-                    <div style="margin-right: 10px;">🔄</div>
-                    <div>Generating summary...</div>
+                    <div style="margin-right: 10px; animation: spin 1s linear infinite;">🔄</div>
+                    <div class="loading-text">Generating summary<span class="loading-dots">...</span></div>
                 </div>
             </div>
             <div style="margin-top: 10px; font-size: 12px; color: #65676b;">
@@ -328,6 +331,48 @@ function addScrapedContentDiv(postElement, postNumber, content) {
                 @keyframes spin {
                     0% { transform: rotate(0deg); }
                     100% { transform: rotate(360deg); }
+                }
+                @keyframes gradientShift {
+                    0% { background-position: 0% 50%; }
+                    25% { background-position: 100% 50%; }
+                    50% { background-position: 50% 100%; }
+                    75% { background-position: 0% 50%; }
+                    100% { background-position: 50% 0%; }
+                }
+                @keyframes shimmer {
+                    0% { background-position: -200% 0; }
+                    100% { background-position: 200% 0; }
+                }
+                @keyframes pulse {
+                    0%, 100% { opacity: 1; }
+                    50% { opacity: 0.6; }
+                }
+                @keyframes loadingDots {
+                    0%, 20% { opacity: 0; }
+                    50% { opacity: 1; }
+                    100% { opacity: 0; }
+                }
+                .loading-text {
+                    background: linear-gradient(90deg, #65676b 25%, #4267B2 50%, #65676b 75%);
+                    background-size: 200% 100%;
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                    animation: shimmer 2s ease-in-out infinite;
+                    font-weight: 500;
+                }
+                .loading-dots {
+                    animation: pulse 1.5s ease-in-out infinite;
+                    color: #4267B2;
+                    font-weight: bold;
+                }
+                .loading-dots::after {
+                    content: '';
+                    animation: loadingDots 1.5s infinite 0.5s;
+                }
+                .loading-dots::before {
+                    content: '';
+                    animation: loadingDots 1.5s infinite 1s;
                 }
             `;
             document.head.appendChild(style);
@@ -358,6 +403,11 @@ async function updateScrapedContentDiv(postElement, postNumber, content) {
             if (summaryContentDiv) {
                 summaryContentDiv.innerHTML = summary || 'Failed to generate summary';
             }
+            
+            // Remove gradient animation and apply static background
+            existingDiv.style.background = '#f0f2f5';
+            existingDiv.style.animation = 'none';
+            
             existingDiv.querySelector('div:nth-child(3) em').textContent = `Generated at: ${new Date().toLocaleTimeString()}`;
             console.log(`✅ Updated existing scraped content div for post ${postNumber}`);
         }
@@ -372,6 +422,10 @@ async function updateScrapedContentDiv(postElement, postNumber, content) {
             if (summaryContentDiv) {
                 summaryContentDiv.innerHTML = '<div style="color: #dc3545;">❌ Failed to generate summary</div>';
             }
+            
+            // Remove gradient animation and apply static background even on error
+            existingDiv.style.background = '#f0f2f5';
+            existingDiv.style.animation = 'none';
         }
     }
 }

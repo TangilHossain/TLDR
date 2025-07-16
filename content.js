@@ -1,35 +1,49 @@
-
 // Content script for Facebook Post Scraper
 console.log('🚀 Facebook Post Scraper content script loaded');
 
 // Auto-scraping variables
 let autoScrapeInterval = null;
 let isAutoScraping = false;
+let apikey=null;
 
-async function summarizePost(content) {
-    const apiKey = "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"; // Replace with your actual key
+async function summarizePost(content, apiKey) {
+    if (!apiKey) {
+        apiKey = "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"; // Replace with your actual key
+    }else{
+        apiKey = apiKey;
+    }
     // const siteUrl = "https://your-site-url.com";
     // const siteName = "Qwen3 Summary Tool";
 
-    const fewShotPrompt = `
-    You are a helpful assistant that summarizes social media or blog posts in 1-2 sentences.
+const fewShotPrompt = `
+    You are a helpful assistant that summarizes social media or blog posts. Your task is to generate a summary that is approximately one fourth the length of the original post.
 
-    Example 1:
-    Post: আমি আজকে প্রথমবারের মতো জাভাস্ক্রিপ্ট দিয়ে একটি প্রজেক্ট শেষ করলাম। অনেক কিছু শিখেছি!
-    Summary: ব্যবহারকারী জাভাস্ক্রিপ্ট দিয়ে প্রথম প্রজেক্ট শেষ করেছে এবং অনেক কিছু শিখেছে।
+    Instructions:
+    - **Detect the language** of the input post automatically.
+    - **Write the summary in the same language** as the original post.
+    - Maintain the tone and intent of the original content.
+    - If the post is in English, summarize in English.
+    - If the post is in Bengali, summarize in Bengali.
+    - Do not translate or switch languages.
+    - Keep the summary concise and relevant.
 
-    Example 2:
-    Post: I just finished reading “Deep Learning with Python” — amazing book, especially the chapters on RNNs!
-    Summary: The user finished reading "Deep Learning with Python" and found the RNN chapters especially impressive.
+    Example (Bengali):
+    Post: সময়টা ছিলো ১৯৭৮ সাল। নির্বাচনী প্রচারে প্রেসিডেন্ট জিয়াউর রহমান গিয়েছিলেন গোপালগঞ্জে। কিন্তু গোপালগঞ্জ তাঁকে স্বাগত জানায়নি। মঞ্চে ওঠার আগেই স্থানীয় জনগণের তীব্র প্রতিক্রিয়া ও প্রতিরোধের মুখোমুখি হন তিনি। পরিস্থিতি এতটাই উত্তপ্ত হয়ে ওঠে যে, তাঁকে সেনাবাহিনীর হেলিকপ্টারে করে তাৎক্ষণিকভাবে খুলনায় সরিয়ে নেওয়া হয়। এই ঘটনা তখন সামরিক বাহিনীর মধ্যেও চাঞ্চল্যের জন্ম দেয়।
+    স্বৈরশাসক এইচএম এরশাদ চেয়েছিলেন গোপালগঞ্জে ঢুকতে। পুরো রাষ্ট্রযন্ত্র এবং সেনাবাহিনী নিয়ন্ত্রণে থাকা সত্ত্বেও তিনি গোপালগঞ্জে ঢোকার সাহস পাননি। চেষ্টা করেও সফল হননি। গাড়ি ঘুড়িয়ে দেওয়া হয় নিরাপত্তা বেস্টনি করে। গোপালগঞ্জ আওয়ামী লীগ ছাড়া সবার জন্য ছিলো এক অদৃশ্য দেওয়াল।
+    এখন দেখছি, সেই জায়গায় হাসনাত আবদুল্লাহ একটা লাঠি হাতে, গোখরো সাপের মতো ফোসফোস করতে করতে বারবার এগিয়ে যাচ্ছে........
+    এটাই ইতিহাসের নির্মম ব্যঙ্গ। যেখানে জিয়া ও এরশাদ গণরোষে গোপালগঞ্জ থেকে ফেরত যান, সেখানে তারুণ্যের শক্তি শো ডাউন দিয়ে এসেছে।
+    তাঁদের এ্যাপ্রিশিয়েট করা উচিৎ। এরা তো সাহস করে গেছে এবং গোপালগঞ্জের মাটিতে দাঁড়িয়ে বুক ফুলিয়ে গলা ফাটিয়ে "মুজিববাদ মুরদাবাদ" শ্লোগান দিয়ে এসেছে।
+    অন্যান্য রাজনৈতিক দল ১৬ বছর যাওয়ার সাহসই করে নাই, দখল বাজি, চান্দা-ধান্ধায়ই আছে। এতটুকু সাহস ও হয় নাই।
+    উপহাস করার আগে গোপালগঞ্জের মাটিতে গিয়ে বলে এসো, "মুজিববাদ মুর্দাবাদ"।
 
-    Example 3:
-    Post: আজকের দিনটা খুব খারাপ কেটেছে। রাস্তায় জ্যাম, অফিসে ঝামেলা, সব মিলিয়ে বিরক্ত লাগছে।
-    Summary: ব্যবহারকারীর দিনটি খারাপ কেটেছে ট্রাফিক এবং অফিসের সমস্যার কারণে।
+    Summary (Bengali):  
+    ১৯৭৮ সালে জিয়া ও পরে এরশাদ গোপালগঞ্জে গিয়ে জনরোষে পিছু হটেন। সেই জায়গায় এখন তরুণরা সাহসিকতা দেখিয়ে "মুজিববাদ মুর্দাবাদ" স্লোগান দেয়, যা ইতিহাসের ব্যঙ্গাত্মক মোড়কে পরিবর্তনের ইঙ্গিত দেয়।
 
     Now summarize the following post:
 
-    Post: ${content}
+    Post: ${content}  
     Summary:
+
     `;
 
     try {
@@ -391,26 +405,24 @@ function addScrapedContentDiv(postElement, postNumber, content) {
 // Function to update scraped content div with actual summary
 async function updateScrapedContentDiv(postElement, postNumber, content) {
     try {
-        // Get the post container where the div will be inserted
         const postContainer = postElement.closest('div[data-ad-rendering-role="story_message"]').parentElement;
-        let summary = await summarizePost(content);
-        
-        // Find existing div
-        const existingDiv = postContainer.parentElement.querySelector(`.scraped-content-${postNumber}`);
-        if (existingDiv) {
-            // Update existing div content with actual summary
-            const summaryContentDiv = existingDiv.querySelector('.summary-content');
-            if (summaryContentDiv) {
-                summaryContentDiv.innerHTML = summary || 'Failed to generate summary';
+        // Get API key from chrome.storage
+        chrome.storage.sync.get(['fbApiKey'], async function(result) {
+            const apiKey = result.fbApiKey || null;
+            let summary = await summarizePost(content, apiKey);
+
+            const existingDiv = postContainer.parentElement.querySelector(`.scraped-content-${postNumber}`);
+            if (existingDiv) {
+                const summaryContentDiv = existingDiv.querySelector('.summary-content');
+                if (summaryContentDiv) {
+                    summaryContentDiv.innerHTML = summary || 'Failed to generate summary';
+                }
+                existingDiv.style.background = '#f0f2f5';
+                existingDiv.style.animation = 'none';
+                existingDiv.querySelector('div:nth-child(3) em').textContent = `Generated at: ${new Date().toLocaleTimeString()}`;
+                console.log(`✅ Updated existing scraped content div for post ${postNumber}`);
             }
-            
-            // Remove gradient animation and apply static background
-            existingDiv.style.background = '#f0f2f5';
-            existingDiv.style.animation = 'none';
-            
-            existingDiv.querySelector('div:nth-child(3) em').textContent = `Generated at: ${new Date().toLocaleTimeString()}`;
-            console.log(`✅ Updated existing scraped content div for post ${postNumber}`);
-        }
+        });
     } catch (error) {
         console.error(`❌ Error updating scraped content div for post ${postNumber}:`, error);
         

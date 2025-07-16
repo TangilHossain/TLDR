@@ -80,15 +80,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
     
-    updateStatus('� Scrape buttons are available on each post! Click them to scrape individual posts.');
+    updateStatus('Scrape buttons are available on each post! Click them to scrape individual posts.');
     
     // Add buttons to posts if not already added
     setTimeout(() => {
         chrome.tabs.sendMessage(tab.id, {action: 'addButtons'}, (response) => {
             if (chrome.runtime.lastError) {
-                updateStatus('🔄 Extension loading... Refresh the page if buttons don\'t appear.');
+                updateStatus('Extension loading... Refresh the page if buttons don\'t appear.');
             } else if (response && response.success) {
-                updateStatus('✅ Scrape buttons added to posts! Click any button to scrape that post.');
+                updateStatus('Scrape buttons added to posts! Click any button to scrape that post.');
             }
         });
     }, 1000);
@@ -143,7 +143,7 @@ document.getElementById('addButtons').addEventListener('click', async() => {
         if (chrome.runtime.lastError) {
             updateStatus('❌ Failed to add buttons: ' + chrome.runtime.lastError.message);
         } else if (response && response.success) {
-            updateStatus('✅ Scrape buttons added to posts!');
+            updateStatus('Scrape buttons added to posts!');
         } else {
             updateStatus('❌ Failed to add buttons!');
         }
@@ -223,3 +223,10 @@ function updateStatus(message) {
         statusElement.textContent = message;
     }
 }
+
+document.getElementById('saveApiKey').onclick = function() {
+    const apiKey = document.getElementById('apiKey').value;
+    chrome.storage.sync.set({ fbApiKey: apiKey }, function() {
+        document.getElementById('status').textContent = 'API Key saved!';
+    });
+};

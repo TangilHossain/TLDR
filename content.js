@@ -110,14 +110,14 @@ if (window.location.hostname.includes('facebook.com')) {
     // Only add buttons, no automatic scraping
     setTimeout(() => {
         addScrapeButtonsToPosts();
-    }, 3000); // 3 second delay
+    }, 1000); // 3 second delay
 } else {
     console.log('⚠️ Not on Facebook, skipping button addition');
 }
 
 // Function to add scrape buttons to posts
 function addScrapeButtonsToPosts() {
-    console.log('🔘 Adding scrape buttons to posts...');
+    console.log('🔘 yeeeeeeeeeeeeeeee Adding scrape buttons to posts...');
     
     // Find all posts that might contain the target divs
     const allPosts = document.querySelectorAll('div[data-ad-rendering-role="story_message"]');
@@ -130,7 +130,7 @@ function addScrapeButtonsToPosts() {
         
         // Create scrape button
         const scrapeButton = document.createElement('button');
-        scrapeButton.textContent = '🔍 Scrape';
+        scrapeButton.textContent = '🔍 SCRAPE';
         scrapeButton.className = 'fb-scraper-button';
         scrapeButton.style.cssText = `
             position: absolute;
@@ -182,7 +182,7 @@ function addScrapeButtonsToPosts() {
 function scrapeIndividualPost(postElement, postNumber) {
     try {
         console.log(`🎯 Scraping individual post ${postNumber}...`);
-        
+        console.log("I'm here bitchhcccccccch");
         // Extract content from this specific post
         const targetspans = postElement.querySelectorAll('span[dir="auto"]');
         let content = '';
@@ -197,6 +197,7 @@ function scrapeIndividualPost(postElement, postNumber) {
         
         // Log the scraped content
         console.log(`[${new Date().toLocaleTimeString()}] Individual Post ${postNumber}:`, content);
+        
         
         // Add div with scraped content under the post
         addScrapedContentDiv(postElement, postNumber, content);
@@ -217,6 +218,7 @@ await function addScrapedContentDiv(postElement, postNumber, content) {
     try {
         // Get the post container where the div will be inserted
         const postContainer = postElement.closest('div[data-ad-rendering-role="story_message"]').parentElement;
+        console.log("Bitcchhhhhhhhhhhhhhhhh");
         let sum= null;
         summarizePost(content).then(summary => {
             sum=summary;

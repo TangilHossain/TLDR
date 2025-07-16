@@ -14,40 +14,37 @@
       color: #4267B2;
       font-weight: bold;
     }
-        .api-key-section {
-      margin-bottom: 15px;
-      padding: 12px;
-      background-color: #f8f9fa;
-      border-radius: 6px;
-      border: 1px solid #e3e6ea;
-    }
-    .api-key-label {
-      font-size: 12px;
-      font-weight: bold;
-      color: #4267B2;
-      margin-bottom: 8px;
-    }
-    .api-key-input {
+    button {
       width: 100%;
-      padding: 8px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 12px;
+      padding: 10px;
       margin-bottom: 8px;
-      box-sizing: border-box;
-    }
-    .save-button {
       background-color: #4267B2;
       color: white;
       border: none;
-      padding: 8px 16px;
       border-radius: 4px;
-      font-size: 12px;
       cursor: pointer;
-      width: 100%;
+      font-size: 14px;
     }
-    .save-button:hover {
+    button:hover {
       background-color: #365899;
+    }
+    #stopScraping {
+      background-color: #dc3545;
+    }
+    #stopScraping:hover {
+      background-color: #c82333;
+    }
+    #startScraping {
+      background-color: #28a745;
+    }
+    #startScraping:hover {
+      background-color: #218838;
+    }
+    #addButtons {
+      background-color: #17a2b8;
+    }
+    #addButtons:hover {
+      background-color: #138496;
     }
     #status {
       margin-top: 10px;
@@ -70,14 +67,13 @@
 </head>
 <body>
   <div class="header">Facebook TLDR</div>
-    <div class="api-key-section">
-    <div class="api-key-label">API Key:</div>
-    <input type="password" id="apiKey" class="api-key-input" placeholder="Enter your API key here...">
-    <button id="saveApiKey" class="save-button">Save API Key</button>
-  </div>
+  <button id="grabHtml">Manual Scrape All Posts</button>
+  <button id="addButtons">Add Scrape Buttons to Posts</button>
+  <button id="startScraping">Start Background Scraping</button>
+  <button id="stopScraping">Stop Background Scraping</button>
   <div id="status">Checking for scrape buttons...</div>
   <div class="info">
-    Tip: Look for blue "Scrape" buttons next to each post on Facebook. Click them to scrape individual posts!
+    💡 Tip: Look for blue "🔍 Scrape" buttons next to each post on Facebook. Click them to scrape individual posts!
   </div>
   <script src="popup.js"></script>
 </body>

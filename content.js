@@ -362,8 +362,8 @@ function addScrapedContentDiv(postElement, postNumber, content) {
                     font-weight: 500;
                 }
                 .loading-dots {
-                    animation: pulse 1.5s ease-in-out infinite;
-                    color: #4267B2;
+                    animation: pulse 2s ease-in-out infinite;
+                    color: #5f7aafff;
                     font-weight: bold;
                 }
                 .loading-dots::after {

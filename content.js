@@ -237,6 +237,10 @@ function addScrapeButtonsToPosts() {
 function scrapeIndividualPost(postElement, postNumber) {
     try {
         console.log(`🎯Scraping individual post ${postNumber}...`);
+        
+        // Add div immediately with loading state
+        addScrapedContentDiv(postElement, postNumber, null);
+        
         // Extract content from this specific post
         const targetspans = postElement.querySelectorAll('span[dir="auto"]');
         let content = '';
@@ -252,9 +256,8 @@ function scrapeIndividualPost(postElement, postNumber) {
         // Log the scraped content
         console.log(`[${new Date().toLocaleTimeString()}] Individual Post ${postNumber}:`, content);
         
-        
-        // Add div with scraped content under the post
-        addScrapedContentDiv(postElement, postNumber, content);
+        // Update div with actual summary
+        updateScrapedContentDiv(postElement, postNumber, content);
         
         // Show notification
         showNotification(`Post ${postNumber} scraped! Check console for content.`);
@@ -268,24 +271,19 @@ function scrapeIndividualPost(postElement, postNumber) {
 }
 
 // Function to add scraped content div under post
-async function addScrapedContentDiv(postElement, postNumber, content) {
+function addScrapedContentDiv(postElement, postNumber, content) {
     try {
         // Get the post container where the div will be inserted
         const postContainer = postElement.closest('div[data-ad-rendering-role="story_message"]').parentElement;
-        let summary= await summarizePost(content);
-
         
         // Check if div already exists (look for it after the post container)
         const existingDiv = postContainer.parentElement.querySelector(`.scraped-content-${postNumber}`);
         if (existingDiv) {
-            // Update existing div content instead of creating new one
-            existingDiv.querySelector('div:nth-child(2)').textContent = summary;
-            existingDiv.querySelector('div:nth-child(3) em').textContent = `Generated at: ${new Date().toLocaleTimeString()}`;
-            console.log(`✅ Updated existing scraped content div for post ${postNumber}`);
+            // If div exists, don't create a new one
             return;
         }
         
-        // Create new div with scraped content
+        // Create new div with loading state
         const scrapedDiv = document.createElement('div');
         scrapedDiv.className = `scraped-content-${postNumber}`;
         scrapedDiv.style.cssText = `
@@ -302,13 +300,16 @@ async function addScrapedContentDiv(postElement, postNumber, content) {
             animation: fadeIn 0.5s ease;
         `;
         
-        // Add lorem ipsum content
+        // Add loading content
         scrapedDiv.innerHTML = `
             <div style="font-weight: bold; color: #4267B2; margin-bottom: 10px;">
                 📊 Summary:
             </div>
-            <div>
-                ${summary}    
+            <div class="summary-content">
+                <div style="display: flex; align-items: center; color: #65676b;">
+                    <div style="margin-right: 10px;">🔄</div>
+                    <div>Generating summary...</div>
+                </div>
             </div>
             <div style="margin-top: 10px; font-size: 12px; color: #65676b;">
                 <em>Generated at: ${new Date().toLocaleTimeString()}</em>
@@ -324,17 +325,54 @@ async function addScrapedContentDiv(postElement, postNumber, content) {
                     from { opacity: 0; transform: translateY(-10px); }
                     to { opacity: 1; transform: translateY(0); }
                 }
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
             `;
             document.head.appendChild(style);
         }
         
-        // Insert the div after the post element
+        // Insert the div before the post element
         const postContainerElement = postElement.closest('div[data-ad-rendering-role="story_message"]').parentElement;
-        postContainerElement.insertAdjacentElement('afterend', scrapedDiv);
+        postContainerElement.insertAdjacentElement('beforebegin', scrapedDiv);
         
         console.log(`✅ Added scraped content div for post ${postNumber}`);
     } catch (error) {
         console.error(`❌ Error adding scraped content div for post ${postNumber}:`, error);
+    }
+}
+
+// Function to update scraped content div with actual summary
+async function updateScrapedContentDiv(postElement, postNumber, content) {
+    try {
+        // Get the post container where the div will be inserted
+        const postContainer = postElement.closest('div[data-ad-rendering-role="story_message"]').parentElement;
+        let summary = await summarizePost(content);
+        
+        // Find existing div
+        const existingDiv = postContainer.parentElement.querySelector(`.scraped-content-${postNumber}`);
+        if (existingDiv) {
+            // Update existing div content with actual summary
+            const summaryContentDiv = existingDiv.querySelector('.summary-content');
+            if (summaryContentDiv) {
+                summaryContentDiv.innerHTML = summary || 'Failed to generate summary';
+            }
+            existingDiv.querySelector('div:nth-child(3) em').textContent = `Generated at: ${new Date().toLocaleTimeString()}`;
+            console.log(`✅ Updated existing scraped content div for post ${postNumber}`);
+        }
+    } catch (error) {
+        console.error(`❌ Error updating scraped content div for post ${postNumber}:`, error);
+        
+        // Show error in the div if it exists
+        const postContainer = postElement.closest('div[data-ad-rendering-role="story_message"]').parentElement;
+        const existingDiv = postContainer.parentElement.querySelector(`.scraped-content-${postNumber}`);
+        if (existingDiv) {
+            const summaryContentDiv = existingDiv.querySelector('.summary-content');
+            if (summaryContentDiv) {
+                summaryContentDiv.innerHTML = '<div style="color: #dc3545;">❌ Failed to generate summary</div>';
+            }
+        }
     }
 }
 

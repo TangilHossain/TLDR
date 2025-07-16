@@ -578,8 +578,3 @@ function autoScroll() {
 // Export functions for popup use
 window.scrapeFacebookPosts = scrapeFacebookPosts;
 window.autoScroll = autoScroll;
-
-
-module.exports = {
-  content
-};

@@ -1,5 +1,4 @@
-const {res} = require('./ai');
-
+import { summarizePost } from './ai.js';
 
 
 // Content script for Facebook Post Scraper
@@ -214,16 +213,21 @@ function scrapeIndividualPost(postElement, postNumber) {
 }
 
 // Function to add scraped content div under post
-function addScrapedContentDiv(postElement, postNumber, content) {
+await function addScrapedContentDiv(postElement, postNumber, content) {
     try {
         // Get the post container where the div will be inserted
         const postContainer = postElement.closest('div[data-ad-rendering-role="story_message"]').parentElement;
+        let sum= null;
+        summarizePost(content).then(summary => {
+            sum=summary;
+            console.log("Summary:", summary);
+        });
         
         // Check if div already exists (look for it after the post container)
         const existingDiv = postContainer.parentElement.querySelector(`.scraped-content-${postNumber}`);
         if (existingDiv) {
             // Update existing div content instead of creating new one
-            existingDiv.querySelector('div:nth-child(2)').textContent = content;
+            existingDiv.querySelector('div:nth-child(2)').textContent = sum;
             existingDiv.querySelector('div:nth-child(3) em').textContent = `Generated at: ${new Date().toLocaleTimeString()}`;
             console.log(`✅ Updated existing scraped content div for post ${postNumber}`);
             return;
@@ -252,7 +256,7 @@ function addScrapedContentDiv(postElement, postNumber, content) {
                 📊 Scraped Content for Post ${postNumber}
             </div>
             <div>
-                ${content}    
+                ${sum}    
             </div>
             <div style="margin-top: 10px; font-size: 12px; color: #65676b;">
                 <em>Generated at: ${new Date().toLocaleTimeString()}</em>

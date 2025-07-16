@@ -1,9 +1,67 @@
+
 // Content script for Facebook Post Scraper
 console.log('🚀 Facebook Post Scraper content script loaded');
 
 // Auto-scraping variables
 let autoScrapeInterval = null;
 let isAutoScraping = false;
+
+async function summarizePost(content) {
+    const apiKey = "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"; // Replace with your actual key
+    // const siteUrl = "https://your-site-url.com";
+    // const siteName = "Qwen3 Summary Tool";
+
+    const fewShotPrompt = `
+    You are a helpful assistant that summarizes social media or blog posts in 1-2 sentences.
+
+    Example 1:
+    Post: আমি আজকে প্রথমবারের মতো জাভাস্ক্রিপ্ট দিয়ে একটি প্রজেক্ট শেষ করলাম। অনেক কিছু শিখেছি!
+    Summary: ব্যবহারকারী জাভাস্ক্রিপ্ট দিয়ে প্রথম প্রজেক্ট শেষ করেছে এবং অনেক কিছু শিখেছে।
+
+    Example 2:
+    Post: I just finished reading “Deep Learning with Python” — amazing book, especially the chapters on RNNs!
+    Summary: The user finished reading "Deep Learning with Python" and found the RNN chapters especially impressive.
+
+    Example 3:
+    Post: আজকের দিনটা খুব খারাপ কেটেছে। রাস্তায় জ্যাম, অফিসে ঝামেলা, সব মিলিয়ে বিরক্ত লাগছে।
+    Summary: ব্যবহারকারীর দিনটি খারাপ কেটেছে ট্রাফিক এবং অফিসের সমস্যার কারণে।
+
+    Now summarize the following post:
+
+    Post: ${content}
+    Summary:
+    `;
+
+    try {
+        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${apiKey}`,
+                "Content-Type": "application/json"
+                // "HTTP-Referer": siteUrl,
+                // "X-Title": siteName
+            },
+            body: JSON.stringify({
+                model: "qwen/qwen3-235b-a22b",
+                messages: [
+                    {
+                        role: "user",
+                        content: fewShotPrompt
+                    }
+                ]
+            })
+        });
+
+        const data = await response.json();
+        const summary = data.choices?.[0]?.message?.content;
+        console.log("✅ Summary:", summary);
+        return summary;
+
+    } catch (error) {
+        console.error("🔴 Error:", error);
+        return null;
+    }
+}
 
 // Function to scrape Facebook posts
 function scrapeFacebookPosts() {
@@ -107,14 +165,14 @@ if (window.location.hostname.includes('facebook.com')) {
     // Only add buttons, no automatic scraping
     setTimeout(() => {
         addScrapeButtonsToPosts();
-    }, 3000); // 3 second delay
+    }, 1000); // 3 second delay
 } else {
     console.log('⚠️ Not on Facebook, skipping button addition');
 }
 
 // Function to add scrape buttons to posts
 function addScrapeButtonsToPosts() {
-    console.log('🔘 Adding scrape buttons to posts...');
+    console.log('🔘Adding scrape buttons to posts...');
     
     // Find all posts that might contain the target divs
     const allPosts = document.querySelectorAll('div[data-ad-rendering-role="story_message"]');
@@ -127,7 +185,7 @@ function addScrapeButtonsToPosts() {
         
         // Create scrape button
         const scrapeButton = document.createElement('button');
-        scrapeButton.textContent = '🔍 Scrape';
+        scrapeButton.textContent = '🔍 SCRAPE';
         scrapeButton.className = 'fb-scraper-button';
         scrapeButton.style.cssText = `
             position: absolute;
@@ -178,8 +236,7 @@ function addScrapeButtonsToPosts() {
 // Function to scrape individual post
 function scrapeIndividualPost(postElement, postNumber) {
     try {
-        console.log(`🎯 Scraping individual post ${postNumber}...`);
-        
+        console.log(`🎯Scraping individual post ${postNumber}...`);
         // Extract content from this specific post
         const targetspans = postElement.querySelectorAll('span[dir="auto"]');
         let content = '';
@@ -194,6 +251,7 @@ function scrapeIndividualPost(postElement, postNumber) {
         
         // Log the scraped content
         console.log(`[${new Date().toLocaleTimeString()}] Individual Post ${postNumber}:`, content);
+        
         
         // Add div with scraped content under the post
         addScrapedContentDiv(postElement, postNumber, content);
@@ -210,16 +268,18 @@ function scrapeIndividualPost(postElement, postNumber) {
 }
 
 // Function to add scraped content div under post
-function addScrapedContentDiv(postElement, postNumber, content) {
+async function addScrapedContentDiv(postElement, postNumber, content) {
     try {
         // Get the post container where the div will be inserted
         const postContainer = postElement.closest('div[data-ad-rendering-role="story_message"]').parentElement;
+        let summary= await summarizePost(content);
+
         
         // Check if div already exists (look for it after the post container)
         const existingDiv = postContainer.parentElement.querySelector(`.scraped-content-${postNumber}`);
         if (existingDiv) {
             // Update existing div content instead of creating new one
-            existingDiv.querySelector('div:nth-child(2)').textContent = content;
+            existingDiv.querySelector('div:nth-child(2)').textContent = summary;
             existingDiv.querySelector('div:nth-child(3) em').textContent = `Generated at: ${new Date().toLocaleTimeString()}`;
             console.log(`✅ Updated existing scraped content div for post ${postNumber}`);
             return;
@@ -245,10 +305,10 @@ function addScrapedContentDiv(postElement, postNumber, content) {
         // Add lorem ipsum content
         scrapedDiv.innerHTML = `
             <div style="font-weight: bold; color: #4267B2; margin-bottom: 10px;">
-                📊 Scraped Content for Post ${postNumber}
+                📊 Summary:
             </div>
             <div>
-                ${content}    
+                ${summary}    
             </div>
             <div style="margin-top: 10px; font-size: 12px; color: #65676b;">
                 <em>Generated at: ${new Date().toLocaleTimeString()}</em>
@@ -414,3 +474,8 @@ function autoScroll() {
 // Export functions for popup use
 window.scrapeFacebookPosts = scrapeFacebookPosts;
 window.autoScroll = autoScroll;
+
+
+module.exports = {
+  content
+};

@@ -7,7 +7,7 @@ let autoScrapeInterval = null;
 let isAutoScraping = false;
 
 async function summarizePost(content) {
-    const apiKey = "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"; // Replace with your actual key
+    const apiKey = "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"; // Replace with your actual key
     // const siteUrl = "https://your-site-url.com";
     // const siteName = "Qwen3 Summary Tool";
 
@@ -42,7 +42,7 @@ async function summarizePost(content) {
                 // "X-Title": siteName
             },
             body: JSON.stringify({
-                model: "qwen/qwen3-235b-a22b",
+                model: "qwen/qwen3-8b:free",
                 messages: [
                     {
                         role: "user",
@@ -185,7 +185,7 @@ function addScrapeButtonsToPosts() {
         
         // Create scrape button
         const scrapeButton = document.createElement('button');
-        scrapeButton.textContent = '🔍 SCRAPE';
+        scrapeButton.textContent = '🔍 Summarize';
         scrapeButton.className = 'fb-scraper-button';
         scrapeButton.style.cssText = `
             position: absolute;
@@ -260,7 +260,7 @@ function scrapeIndividualPost(postElement, postNumber) {
         updateScrapedContentDiv(postElement, postNumber, content);
         
         // Show notification
-        showNotification(`Post ${postNumber} scraped! Check console for content.`);
+        // showNotification(`Post ${postNumber} scraped! Check console for content.`);
         
         return content;
     } catch (error) {

@@ -1,4 +1,4 @@
-# Facebook Post Scraper Chrome Extension
+# Facebook Post Summarizer Chrome Extension
 
 A Chrome extension that Summarize facebook Posts.
 

@@ -7,73 +7,116 @@
       font-family: Arial, sans-serif;
       width: 300px;
       padding: 15px;
+      background: #f4f6fb;
     }
     .header {
       text-align: center;
       margin-bottom: 15px;
       color: #4267B2;
       font-weight: bold;
+      font-size: 20px;
+      letter-spacing: 1px;
     }
-        .api-key-section {
+    .api-key-section {
       margin-bottom: 15px;
-      padding: 12px;
+      padding: 16px;
       background-color: #f8f9fa;
-      border-radius: 6px;
+      border-radius: 8px;
       border: 1px solid #e3e6ea;
+      box-shadow: 0 2px 8px rgba(66,103,178,0.05);
     }
     .api-key-label {
-      font-size: 12px;
+      font-size: 13px;
       font-weight: bold;
       color: #4267B2;
       margin-bottom: 8px;
+      letter-spacing: 0.5px;
     }
     .api-key-input {
       width: 100%;
-      padding: 8px;
+      padding: 10px;
       border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 12px;
-      margin-bottom: 8px;
+      border-radius: 5px;
+      font-size: 13px;
+      margin-bottom: 10px;
       box-sizing: border-box;
+      background: #fff;
+      transition: border-color 0.2s;
+    }
+    .api-key-input:focus {
+      border-color: #4267B2;
+      outline: none;
     }
     .save-button {
-      background-color: #4267B2;
+      background: linear-gradient(135deg, #4267B2, #365899);
       color: white;
       border: none;
-      padding: 8px 16px;
-      border-radius: 4px;
-      font-size: 12px;
+      padding: 10px 0;
+      border-radius: 5px;
+      font-size: 13px;
+      font-weight: bold;
       cursor: pointer;
       width: 100%;
+      box-shadow: 0 2px 6px rgba(66,103,178,0.08);
+      transition: background 0.2s;
     }
     .save-button:hover {
-      background-color: #365899;
+      background: linear-gradient(135deg, #365899, #4267B2);
     }
     #status {
-      margin-top: 10px;
+      margin-top: 12px;
       padding: 12px;
-      font-size: 12px;
+      font-size: 13px;
       background-color: #f8f9fa;
-      border-radius: 4px;
+      border-radius: 5px;
       border-left: 3px solid #4267B2;
-      line-height: 1.4;
+      line-height: 1.5;
+      box-shadow: 0 1px 4px rgba(66,103,178,0.04);
     }
     .info {
-      margin-top: 10px;
-      padding: 8px;
-      font-size: 11px;
+      margin-top: 14px;
+      padding: 10px;
+      font-size: 12px;
       background-color: #e7f3ff;
-      border-radius: 4px;
+      border-radius: 5px;
       color: #0056b3;
+      box-shadow: 0 1px 4px rgba(66,103,178,0.03);
+    }
+    #link_info, #link_info2 {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #4267B2;
+      background: #e3f2fd;
+      border-radius: 4px;
+      padding: 6px 8px;
+      box-shadow: 0 1px 4px rgba(66,103,178,0.03);
+    }
+    #link_info .a, #link_info2 .a {
+      color: #0056b3;
+      font-weight: bold;
+      word-break: break-all;
+      margin-top: 2px;
     }
   </style>
 </head>
 <body>
   <div class="header">Facebook TLDR</div>
-    <div class="api-key-section">
+  <div class="api-key-section">
     <div class="api-key-label">API Key:</div>
     <input type="password" id="apiKey" class="api-key-input" placeholder="Enter your API key here...">
     <button id="saveApiKey" class="save-button">Save API Key</button>
+  </div>
+  <div id="link_info">
+    Get your own api at
+    <div class="a">
+      <a href="https://openrouter.ai/qwen/qwen3-8b:free/api" target="_blank" rel="noopener noreferrer">
+        https://openrouter.ai/qwen/qwen3-8b:free/api
+      </a>
+    </div>
+  </div>
+  <div id="link_info2">
+    Full guideline
+    <div class="a"></div>
   </div>
   <div id="status">Checking for scrape buttons...</div>
   <div class="info">

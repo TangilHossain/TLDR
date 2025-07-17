@@ -234,28 +234,28 @@ function addScrapeButtonsToPosts() {
         // Add click event to scrape individual post
         scrapeButton.onclick = function(e) {
             //seemore btn click
-            const seeMoreBtn = post.querySelector('div[role="button"]');
-            if (seeMoreBtn ) {
-                seeMoreBtn.click();
-                // console.log('✅ "See more" button clicked');
+            // const seeMoreBtn = post.querySelector('div[role="button"]');
+            // if (seeMoreBtn ) {
+            //     seeMoreBtn.click();
+            //     // console.log('✅ "See more" button clicked');
                 
-            }
+            // }
             e.preventDefault();
             e.stopPropagation();
-            // scrapeIndividualPost(post, index + 1);
-            setTimeout(() => {
-                // Re-select all posts
-                const allPosts = document.querySelectorAll('div[data-ad-rendering-role="story_message"]');
-                // Find the updated post by index and pass to scrapeIndividualPost
-                const updatedPost = allPosts[index];
-                if (updatedPost) {
-                    // console.log(updatedPost.innerHTML);
-                    scrapeIndividualPost(updatedPost, index + 1);
-                } else {
-                    // Fallback to original post if not found
-                    scrapeIndividualPost(post, index + 1);
-                }
-            }, 300);
+            scrapeIndividualPost(post, index + 1);
+            // setTimeout(() => {
+            //     // Re-select all posts
+            //     const allPosts = document.querySelectorAll('div[data-ad-rendering-role="story_message"]');
+            //     // Find the updated post by index and pass to scrapeIndividualPost
+            //     const updatedPost = allPosts[index];
+            //     if (updatedPost) {
+            //         // console.log(updatedPost.innerHTML);
+            //         scrapeIndividualPost(updatedPost, index + 1);
+            //     } else {
+            //         // Fallback to original post if not found
+            //         scrapeIndividualPost(post, index + 1);
+            //     }
+            // }, 300);
         };
         
         // Make the parent container relative for absolute positioning

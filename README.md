@@ -1,18 +1,18 @@
 # Facebook Post Scraper Chrome Extension
 
-A Chrome extension that scrapes data from Facebook posts including post content, author information, engagement metrics, and metadata.
+A Chrome extension that Summarize facebook Posts.
 
 ## Features
 
 - 🔍 **Smart Post Detection**: Automatically identifies Facebook posts using multiple selector strategies
-- 📊 **Engagement Metrics**: Extracts likes, comments, and shares count
-- 👤 **Author Information**: Captures post author names and profile links
-- 📅 **Timestamp Data**: Records when posts were created
+- 📊 **Summary Generation**: Can generate summary of the post
+- 👤 **Multi Lingual Support**: Can support both Bengali & English
+<!-- - 📅 **Timestamp Data**: Records when posts were created
 - 🖼️ **Media Detection**: Identifies images and media in posts
 - 🏷️ **Hashtag Extraction**: Finds and extracts hashtags from post content
 - 💾 **Data Storage**: Saves scraped data locally with Chrome storage
 - 📥 **Export Function**: Export data to JSON format
-- 🎨 **Modern UI**: Beautiful gradient interface with smooth animations
+- 🎨 **Modern UI**: Beautiful gradient interface with smooth animations -->
 
 ## Installation
 
@@ -26,12 +26,12 @@ A Chrome extension that scrapes data from Facebook posts including post content,
 
 1. Navigate to Facebook.com
 2. Click on the extension icon in your Chrome toolbar
-3. Click "🚀 Scrape Current Page" to extract posts from the current page
-4. View scraped data in the popup window
-5. Use "📥 Export Data" to download all scraped data as JSON
-6. Use "🗑️ Clear Data" to remove all stored data
+3. Paste your api key in the popup window
+4. Reload the facebook tab
+5. Press the summarize button to "summarize" any post and wait 5 to 10 seconds
+6. If generation is failed, press "summaraize" button again and wait 5 to 10 seconds
 
-## Data Structure
+<!-- ## Data Structure
 
 Each scraped post contains:
 
@@ -54,7 +54,7 @@ Each scraped post contains:
   ],
   "hashtags": ["#hashtag1", "#hashtag2"]
 }
-```
+``` -->
 
 ## Privacy and Ethics
 
@@ -63,9 +63,8 @@ Each scraped post contains:
 - This extension is for educational and research purposes only
 - Always respect Facebook's Terms of Service and robots.txt
 - Do not use this tool to violate privacy or scrape personal data without consent
-- Be mindful of rate limiting and avoid excessive scraping
+- Be mindful of rate limiting and avoid excessive use of api key
 - Consider the ethical implications of data collection
-- Some data may be protected by privacy settings and may not be scrapeable
 
 ## Technical Details
 
@@ -84,12 +83,12 @@ Each scraped post contains:
 
 - Facebook frequently updates their DOM structure, which may break selectors
 - Some posts may not be accessible due to privacy settings
-- Rate limiting by Facebook may prevent scraping large amounts of data
+- Rate limiting by Openrouter may prevent scraping large amounts of data
 - The extension works best with public posts and pages
 
-## Troubleshooting
+<!-- ## Troubleshooting
 
-### No posts found
+### Generation failed
 - Make sure you're on a Facebook page with visible posts
 - Try scrolling down to load more posts
 - Check if posts are public and visible
@@ -110,7 +109,7 @@ To modify or extend the extension:
 1. Edit the source files as needed
 2. Go to `chrome://extensions/`
 3. Click the refresh icon on the extension card
-4. Test your changes
+4. Test your changes -->
 
 ## Contributing
 

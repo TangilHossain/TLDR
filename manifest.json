@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Facebook Background Scraper",
+  "name": "Facebook Post Summarizer",
   "version": "1.0",
-  "description": "Automatically scrape Facebook posts in the background",
+  "description": "Summarize any post in facebook",
   "permissions": [
     "activeTab",
     "scripting",
@@ -14,7 +14,7 @@
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Facebook Background Scraper"
+    "default_title": "Facebook Post Summarizer"
   },
   "content_scripts": [
     {

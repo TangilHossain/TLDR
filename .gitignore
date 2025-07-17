@@ -1,0 +1,36 @@
+# Node modules (if any)
+node_modules/
+
+# Chrome extension build artifacts
+*.crx
+*.pem
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Logs
+*.log
+
+# VSCode settings
+.vscode/
+
+# Environment files
+.env
+.env.*
+
+# Backup files
+*.bak
+*.tmp
+*.swp
+
+# Personal/OS sync folders
+*.sublime-workspace
+*.sublime-project
+
+# OneDrive sync files
+~$*
+
+# Ignore API keys or secrets if present

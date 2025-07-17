@@ -8,7 +8,9 @@ let apikey=null;
 
 async function summarizePost(content, apiKey) {
     if (!apiKey) {
-        apiKey = "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"; // Replace with your actual key
+        // apiKey = "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"; // Replace with your actual key
+        apiKey = "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"; // Replace with your actual key
+
     }else{
         apiKey = apiKey;
     }
@@ -179,7 +181,7 @@ if (window.location.hostname.includes('facebook.com')) {
     // Only add buttons, no automatic scraping
     setTimeout(() => {
         addScrapeButtonsToPosts();
-    }, 1000); // 3 second delay
+    }, 1000); // 1 second delay
 } else {
     console.log('⚠️ Not on Facebook, skipping button addition');
 }
@@ -231,9 +233,29 @@ function addScrapeButtonsToPosts() {
         
         // Add click event to scrape individual post
         scrapeButton.onclick = function(e) {
+            //seemore btn click
+            const seeMoreBtn = post.querySelector('div[role="button"]');
+            if (seeMoreBtn ) {
+                seeMoreBtn.click();
+                // console.log('✅ "See more" button clicked');
+                
+            }
             e.preventDefault();
             e.stopPropagation();
-            scrapeIndividualPost(post, index + 1);
+            
+            setTimeout(() => {
+                // Re-select all posts
+                const allPosts = document.querySelectorAll('div[data-ad-rendering-role="story_message"]');
+                // Find the updated post by index and pass to scrapeIndividualPost
+                const updatedPost = allPosts[index];
+                if (updatedPost) {
+                    // console.log(updatedPost.innerHTML);
+                    scrapeIndividualPost(updatedPost, index + 1);
+                } else {
+                    // Fallback to original post if not found
+                    scrapeIndividualPost(post, index + 1);
+                }
+            }, 300);
         };
         
         // Make the parent container relative for absolute positioning
@@ -289,6 +311,12 @@ function addScrapedContentDiv(postElement, postNumber, content) {
     try {
         // Get the post container where the div will be inserted
         const postContainer = postElement.closest('div[data-ad-rendering-role="story_message"]').parentElement;
+        // console.log(postContainer);
+        // const seemoreBtn = postContainer.querySelectorAll('div[role="button"]');
+        // if(seemoreBtn){
+        //     console.log('Found See More button, yeeeeee');
+        //     console.log(seemoreBtn.parentElement);
+        // }
         
         // Check if div already exists (look for it after the post container)
         const existingDiv = postContainer.parentElement.querySelector(`.scraped-content-${postNumber}`);

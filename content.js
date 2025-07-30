@@ -1,6 +1,5 @@
 // Content script for Facebook Post Scraper
 console.log('🚀 Facebook Post Scraper content script loaded');
-console.log('🚀 Facebook Post Scraper content script loaded');
 
 // Auto-scraping variables
 let autoScrapeInterval = null;
@@ -9,7 +8,9 @@ let apikey=null;
 
 async function summarizePost(content, apiKey) {
     if (!apiKey) {
-        apiKey = "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"; // Replace with your actual key
+        // apiKey = "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"; // Replace with your actual key
+        // apiKey = "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"; // Replace with your actual key
+
     }else{
         apiKey = apiKey;
     }
